@@ -1,4 +1,4 @@
-module github.com/upbound/upjet-provider-template
+module github.com/home.net/provider-openstack
 
 go 1.21
 

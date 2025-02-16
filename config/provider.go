@@ -10,12 +10,15 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 
-	"github.com/upbound/upjet-provider-template/config/null"
+	"github.com/wr41th/provider-openstack/config/compute"
+	"github.com/wr41th/provider-openstack/config/dns"
+	"github.com/wr41th/provider-openstack/config/identity"
+	"github.com/wr41th/provider-openstack/config/networking"
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/upbound/upjet-provider-template"
+	resourcePrefix = "openstack"
+	modulePath     = "github.com/wr41th/provider-openstack"
 )
 
 //go:embed schema.json
@@ -27,7 +30,7 @@ var providerMetadata string
 // GetProvider returns provider configuration
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("template.upbound.io"),
+		ujconfig.WithRootGroup("crossplane.io"),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
@@ -36,7 +39,10 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		compute.Configure,
+		dns.Configure,
+		identity.Configure,
+		networking.Configure,
 	} {
 		configure(pc)
 	}
